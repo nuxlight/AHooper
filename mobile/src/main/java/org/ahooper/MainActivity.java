@@ -11,11 +11,15 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 
 public class MainActivity extends Activity {
 
     private String[] drawerItemsList;
     private ListView myDrawer;
+    private ListView listVideo;
     private DrawerLayout mDrawerobj;
 
     @Override
@@ -25,6 +29,11 @@ public class MainActivity extends Activity {
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeButtonEnabled(true);
         setContentView(R.layout.activity_main);
+
+        listVideo = (ListView) findViewById(R.id.home_liste);
+
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+
 
         drawerItemsList = getResources().getStringArray(R.array.items);
         myDrawer = (ListView) findViewById(R.id.my_drawer);
