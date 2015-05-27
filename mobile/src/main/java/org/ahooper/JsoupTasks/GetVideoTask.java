@@ -1,112 +1,80 @@
 package org.ahooper.JsoupTasks;
 
-import android.os.AsyncTask;
-
-import org.ahooper.VideoItem;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by Thibaud on 27/05/15.
  */
 public class GetVideoTask {
 
-    public static List<String> getNewersVideo(){
-        List<String> result=new ArrayList<>();
-        String url = "http://www.hooper.fr";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            Element content = doc.getElementById("block-views-frontpage-block_1");
-            Elements links = content.getElementsByAttributeValueMatching("class","views-field-field-video-embed");
-            int index=0;
-            for(Element link : links){
-                result.add((index++), "Titre : " + link.select("a[href]").text());
-                result.add((index++), "Image : " + link.select("a").select("img").attr("src"));
-                result.add((index++), "url : " + url + link.select("a[href]").attr("href"));
-            }
-            return result;
-        }
-        catch (Exception e){
-            System.out.println("[ERROR] - " + e.toString());
-        }
-        return null;
-    }
-
     /**
      * Récupère les nouvelles video de la page principal d'Hooper.fr
      * @return Retourne une liste d'item (fiche video)
      */
-    public static List<VideoItem> getLastVideo(){
-        List<VideoItem> result=new ArrayList<>();
+    public ArrayList<HashMap<String, String>> getLastVideo(){
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
         //String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
         String url = "http://www.hooper.fr";
         try{
             Document doc = Jsoup.connect(url).get();
-            //page d'acceuil
             Element content = doc.getElementById("block-views-frontpage-block_3");
-            //une page (ici epopee)
-            //Element content = doc.getElementById("main");
-            //Cette ligne tue sa maman de malade :D
-            Elements links = content.getElementsByAttributeValueMatching("class","views-row");
+            Elements links = content.getElementsByAttributeValueMatching("class", "views-row");
             int index = 0;
             for(Element link : links){
-                VideoItem item = new VideoItem(link.select("a[href]").text(),
-                        link.select("a").select("img").attr("src"),
-                        url + link.select("a[href]").attr("href"),
-                        link.select("span").eq(4).text(),
-                        link.select("span").eq(6).text(),
-                        link.select("span").eq(0).text());
-                result.add((index), item);
+                HashMap<String, String> map;
+                map = new HashMap<String, String>();
+                map.put("videoTitle", link.select("a[href]").text());
+                map.put("videoURL", link.select("a").select("img").attr("src"));
+                map.put("videoImageURL", url + link.select("a[href]").attr("href"));
+                map.put("videoPlateform", link.select("span").eq(4).text());
+                map.put("videoDate", link.select("span").eq(6).text());
+                map.put("videoType", link.select("span").eq(0).text());
+                listItem.add(map);
             }
         }
         catch (Exception e){
             System.out.println("[ERROR] - " + e.toString());
+            return null;
         }
-        for(int a=0;a<result.size();a++){
-            return result;
-        }
-        return null;
+        return listItem;
     }
 
-    public static List<VideoItem> getLastLive(){
-        List<VideoItem> result=new ArrayList<>();
+    public static ArrayList<HashMap<String, String>> getLastLive(){
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
         //String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
         String url = "http://www.hooper.fr";
         try{
             Document doc = Jsoup.connect(url).get();
-            //page d'acceuil
             Element content = doc.getElementById("block-views-frontpage-block_2");
-            //une page (ici epopee)
-            //Element content = doc.getElementById("main");
-            //Cette ligne tue sa maman de malade :D
-            Elements links = content.getElementsByAttributeValueMatching("class","views-row");
+            Elements links = content.getElementsByAttributeValueMatching("class", "views-row");
             int index = 0;
             for(Element link : links){
-                VideoItem item = new VideoItem(link.select("a[href]").text(),
-                        link.select("a").select("img").attr("src"),
-                        url + link.select("a[href]").attr("href"),
-                        link.select("span").eq(4).text(),
-                        link.select("span").eq(6).text(),
-                        link.select("span").eq(0).text());
-                result.add((index), item);
+                HashMap<String, String> map;
+                map = new HashMap<String, String>();
+                map.put("videoTitle", link.select("a[href]").text());
+                map.put("videoURL", link.select("a").select("img").attr("src"));
+                map.put("videoImageURL", url + link.select("a[href]").attr("href"));
+                map.put("videoPlateform", link.select("span").eq(4).text());
+                map.put("videoDate", link.select("span").eq(6).text());
+                map.put("videoType", link.select("span").eq(0).text());
+                listItem.add(map);
             }
         }
         catch (Exception e){
             System.out.println("[ERROR] - " + e.toString());
+            return null;
         }
-        for(int a=0;a<result.size();a++){
-            return result;
-        }
-        return null;
+        return listItem;
     }
 
-    public static List<VideoItem> getVideoBySection(String section, int pages){
-        List<VideoItem> result=new ArrayList<>();
+    public static ArrayList<HashMap<String, String>> getVideoBySection(String section, int pages){
+        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
         //String html = "<p>An <a href='http://example.com/'><b>example</b></a> link.</p>";
         String url = "http://www.hooper.fr/"+section+"?page="+pages;
         try{
@@ -119,20 +87,19 @@ public class GetVideoTask {
             Elements links = content.getElementsByAttributeValueMatching("class","views-row");
             int index = 0;
             for(Element link : links){
-                VideoItem item = new VideoItem(link.select("a[href]").text(),
-                        link.select("a").select("img").attr("src"),
-                        url + link.select("a[href]").attr("href"),
-                        link.select("span").eq(4).text(),
-                        link.select("span").eq(6).text(),
-                        link.select("span").eq(0).text());
-                result.add((index), item);
+                HashMap<String, String> map;
+                map = new HashMap<String, String>();
+                map.put("videoTitle", link.select("a[href]").text());
+                map.put("videoURL", link.select("a").select("img").attr("src"));
+                map.put("videoImageURL", url + link.select("a[href]").attr("href"));
+                map.put("videoPlateform", link.select("span").eq(4).text());
+                map.put("videoDate", link.select("span").eq(6).text());
+                map.put("videoType", link.select("span").eq(0).text());
+                listItem.add(map);
             }
         }
         catch (Exception e){
             System.out.println("[ERROR] - " + e.toString());
-        }
-        for(int a=0;a<result.size();a++){
-            return result;
         }
         return null;
     }

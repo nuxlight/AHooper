@@ -10,6 +10,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import org.ahooper.JsoupTasks.GetVideoTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,10 +33,18 @@ public class MainActivity extends Activity {
         actionbar.setHomeButtonEnabled(true);
         setContentView(R.layout.activity_main);
 
+        //Test des fonctions Jsoup
+        GetVideoTask videoTask = new GetVideoTask();
+
         listVideo = (ListView) findViewById(R.id.home_liste);
 
-        ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> listItem = videoTask.getLastVideo();
 
+        SimpleAdapter mSchedule = new SimpleAdapter(this.getBaseContext(), listItem, R.layout.item_video_layout,
+                new String[] {"videoTitle", "videoImageURL", "videoPlateform", "videoDate", "videoType"},
+                new int[] {R.id.titre_item, R.id.image_item, R.id.console_item, R.id.date_item, R.id.type_item});
+
+        listVideo.setAdapter(mSchedule);
 
         drawerItemsList = getResources().getStringArray(R.array.items);
         myDrawer = (ListView) findViewById(R.id.my_drawer);
